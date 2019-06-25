@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
 
-from systemdhandler import SystemdHandler
 import logging
 import sys
 import time
 import socket
 import select
 import queue as Queue
+from systemdhandler import SystemdHandler
+from messages import Messages
 
 class Allegra():
     def __init__(self, port):
-        # Init logger
         root_logger = logging.getLogger()
         root_logger.setLevel("INFO")
         root_logger.addHandler(SystemdHandler())
-
-        # create async socket
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.setblocking(0)
+        m = Messages()
 
         try:
             server.bind(('localhost', port))
@@ -26,8 +25,9 @@ class Allegra():
             outputs = []
             data_queues = {}
             message_queues = {}
-        except socket.error as msg:
-            logging.error('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
+        except socket.error:
+            logging.error('Bind failed.')
+            sys.exit(1)
 
         while inputs:
             try:
@@ -69,11 +69,7 @@ class Allegra():
                     except Queue.Empty:
                         outputs.remove(s)
                     else:
-                        # This is an example string comparison against a message
-                        if (str(next_msg, 'utf-8') == 'test'):
-                            s.send(b'monkey\n')
-                        else:
-                            s.send(next_msg)
+                        s.send(m.check(next_msg))
 
                 for s in exceptional:
                     inputs.remove(s)
