@@ -38,6 +38,7 @@ class Messages():
             Response('look', 'An open chest is sitting in the middle of this empty room. The door to the east returns the way you came.', checks=['room3','chest_open'], set_on=['ring']),
             Response('back', 'You return the way you came. That room was creepy anyway.', checks=['room3'], set_on=['room1'], set_off=['room3']),
             Response('east', 'You walk through the eastern door.', checks=['room3'], set_on=['room1'], set_off=['room3']),
+            Response('key|lock|blue', 'You try to open the chest, but it won\'t budge. Perhaps if you had the key?', checks=['room3'], exceptions=['blue_key'])
             Response('key|lock|blue', 'You open the chest to reveal a beautiful golden ring. Plucking it from the velvety interior, you slip in onto your finger. It feels cool and heavy, and you have the sense that this was a mistake.', checks=['room3', 'blue_key'], set_on=['ring'])
         ]
 
