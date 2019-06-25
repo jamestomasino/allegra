@@ -18,7 +18,7 @@ class Allegra():
         server.setblocking(0)
 
         try:
-            server.bind(('localhost', port))
+            server.bind(('', port))
             server.listen(5)
             inputs = [server]
             outputs = []
