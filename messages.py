@@ -1,38 +1,32 @@
 import random
+import re
 
-responses = {
-    'test': 'Conosci mio Pappà?',
-    'english': 'I... think I remember that'
-}
-
-error_ita = 'Non capisco, Pappà. '
-error_responses_ita = [
-    'Dove siamo? Aiutami',
-    'Non vedo niente',
-    'Dove ti nascondi?'
-]
-
-error_eng = 'I don\'t understand, daddy. '
-error_responses_eng = [
-    'Where are we? Help me',
-    'I can\'t see you',
-    'Where are you hiding?'
-]
+error = 'Non capisco, Pappà. '
 
 class Messages():
     def __init__(self):
-        self.is_italian = True
+        self.responses = [
+            Response('test', 'Conosci mio Pappà?'),
+            Response('english', 'I... think I remember that')
+        ]
 
     def check(self, msg_byte_arr):
-        msg = str(msg_byte_arr, 'utf-8')
-        if msg.lower() in responses:
-            if (msg.lower() == 'english'):
-                self.is_italian = False
-            response = responses[msg.lower()] + '\n'
-            return response.encode('utf-8')
-        else:
-            if self.is_italian:
-                response = error_ita + random.choice(error_responses_ita) + '\n'
-            else:
-                response = error_eng + random.choice(error_responses_eng) + '\n'
-            return response.encode('utf-8')
+        try:
+            msg = str(msg_byte_arr, 'utf-8')
+        except:
+            msg = ' ' # handle non-text characters
+
+        response = ''
+        for r in self.responses:
+            if r.regex.match(msg):
+                response = r.resp + '\n'
+                break
+
+        if response == '':
+            response = error + '\n'
+        return response.encode('utf-8')
+
+class Response():
+    def __init__(self, match_str, resp):
+        self.regex = re.compile(match_str)
+        self.resp = resp

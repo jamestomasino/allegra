@@ -30,59 +30,54 @@ class Allegra():
             sys.exit(1)
 
         while inputs:
-            try:
-                readable, writable, exceptional = select.select(
+            readable, writable, exceptional = select.select(
                     inputs, outputs, inputs)
-                for s in readable:
-                    if s is server:
-                        connection, client_address = s.accept()
-                        connection.setblocking(0)
-                        inputs.append(connection)
-                        message_queues[connection] = Queue.Queue()
-                        data_queues[connection] = Queue.Queue()
-                        responses[connection] = Messages()
+            for s in readable:
+                if s is server:
+                    connection, client_address = s.accept()
+                    connection.setblocking(0)
+                    inputs.append(connection)
+                    message_queues[connection] = Queue.Queue()
+                    data_queues[connection] = Queue.Queue()
+                    responses[connection] = Messages()
+                else:
+                    incoming = s.recv(1024)
+                    if incoming:
+                        try:
+                            data = data_queues[s].get_nowait()
+                        except Queue.Empty:
+                            data = bytearray(b'')
+                        data.extend(incoming)
+                        if b'\n' in data:
+                            parts = data.split(b'\n')
+                            message_queues[s].put(parts[0])
+                            data = parts[1]
+                        data_queues[s].put(data)
+                        if s not in outputs:
+                            outputs.append(s)
                     else:
-                        incoming = s.recv(1024)
-                        if incoming:
-                            try:
-                                data = data_queues[s].get_nowait()
-                            except Queue.Empty:
-                                data = bytearray(b'')
-                            data.extend(incoming)
-                            if b'\n' in data:
-                                parts = data.split(b'\n')
-                                message_queues[s].put(parts[0])
-                                data = parts[1]
-                            data_queues[s].put(data)
-                            if s not in outputs:
-                                outputs.append(s)
-                        else:
-                            if s in outputs:
-                                outputs.remove(s)
-                            inputs.remove(s)
-                            s.close()
-                            del message_queues[s]
-                            del data_queues[s]
-                            del responses[s]
+                        if s in outputs:
+                            outputs.remove(s)
+                        inputs.remove(s)
+                        s.close()
+                        del message_queues[s]
+                        del data_queues[s]
+                        del responses[s]
 
-                for s in writable:
-                    try:
-                        next_msg = message_queues[s].get_nowait()
-                    except Queue.Empty:
-                        outputs.remove(s)
-                    else:
-                        s.send(responses[s].check(next_msg))
+            for s in writable:
+                try:
+                    next_msg = message_queues[s].get_nowait()
+                except Queue.Empty:
+                    outputs.remove(s)
+                else:
+                    s.send(responses[s].check(next_msg))
 
-                for s in exceptional:
-                    inputs.remove(s)
-                    if s in outputs:
-                        outputs.remove(s)
-                    s.close()
-                    del message_queues[s]
-            except KeyboardInterrupt:
-                server.close()
-                logging.info('Shutting down socket connection.')
-                sys.exit(1)
+            for s in exceptional:
+                inputs.remove(s)
+                if s in outputs:
+                    outputs.remove(s)
+                s.close()
+                del message_queues[s]
 
 if __name__ == '__main__':
     Allegra(1822)
