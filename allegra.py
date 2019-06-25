@@ -16,7 +16,6 @@ class Allegra():
         root_logger.addHandler(SystemdHandler())
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.setblocking(0)
-        m = Messages()
 
         try:
             server.bind(('localhost', port))
@@ -25,6 +24,7 @@ class Allegra():
             outputs = []
             data_queues = {}
             message_queues = {}
+            responses = {}
         except socket.error:
             logging.error('Bind failed.')
             sys.exit(1)
@@ -40,6 +40,7 @@ class Allegra():
                         inputs.append(connection)
                         message_queues[connection] = Queue.Queue()
                         data_queues[connection] = Queue.Queue()
+                        responses[connection] = Messages()
                     else:
                         incoming = s.recv(1024)
                         if incoming:
@@ -62,6 +63,7 @@ class Allegra():
                             s.close()
                             del message_queues[s]
                             del data_queues[s]
+                            del responses[s]
 
                 for s in writable:
                     try:
@@ -69,7 +71,7 @@ class Allegra():
                     except Queue.Empty:
                         outputs.remove(s)
                     else:
-                        s.send(m.check(next_msg))
+                        s.send(responses[s].check(next_msg))
 
                 for s in exceptional:
                     inputs.remove(s)
