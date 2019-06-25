@@ -14,6 +14,7 @@ class Allegra():
         root_logger = logging.getLogger()
         root_logger.setLevel("INFO")
         root_logger.addHandler(SystemdHandler())
+        socket.setdefaulttimeout(60)
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.setblocking(0)
