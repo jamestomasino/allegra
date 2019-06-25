@@ -1,5 +1,4 @@
-import random
-import re
+from response import Response
 
 error = 'Non capisco, Pappà. '
 
@@ -25,8 +24,3 @@ class Messages():
         if response == '':
             response = error + '\n'
         return response.encode('utf-8')
-
-class Response():
-    def __init__(self, match_str, resp):
-        self.regex = re.compile(match_str)
-        self.resp = resp
