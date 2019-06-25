@@ -1,6 +1,6 @@
 from response import Response
 
-error = 'Non capisco, Pappà. '
+error = 'I don\'t understand.'
 
 class Messages():
     def __init__(self):
