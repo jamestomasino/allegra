@@ -1,4 +1,3 @@
-import logging
 import random
 
 responses = {
@@ -14,7 +13,6 @@ error_responses = [
 ]
 
 class Messages():
-
     def check(self, msg_byte_arr):
         msg = str(msg_byte_arr, 'utf-8')
         if msg.lower() in responses:
