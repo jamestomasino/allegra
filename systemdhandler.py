@@ -3,15 +3,12 @@ import sys
 
 class SystemdHandler(logging.Handler):
     PREFIX = {
-        #logging.EMERG: "<0>",
-        #logging.ALERT: "<1>",
-        logging.CRITICAL: "<2>",
-        logging.ERROR: "<3>",
-        logging.WARNING: "<4>",
-        #logging.NOTICE: "<5>",
-        logging.INFO: "<6>",
-        logging.DEBUG: "<7>",
-        logging.NOTSET: "<7>"
+        logging.CRITICAL: "<CRITICAL> ",
+        logging.ERROR: "<ERROR> ",
+        logging.WARNING: "<WARNING> ",
+        logging.INFO: "<INFO> ",
+        logging.DEBUG: "<DEBUG> ",
+        logging.NOTSET: "<DEBUG> "
     }
 
     def __init__(self, stream=sys.stdout):
