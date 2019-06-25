@@ -5,9 +5,9 @@
 # TODO
 
 - better error handling
-  - if data is not strings
-  - if strings are not utf-8
-  - if server cannot bind to port
+  - ~~if data is not strings~~
+  - ~~if strings are not utf-8~~
+  - ~~if server cannot bind to port~~
   - if unexpected ninjas strike
 - develop data structure for messages
   - trigger
