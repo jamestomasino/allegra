@@ -46,28 +46,37 @@ class Allegra():
                         responses[connection] = Messages()
                         logging.info('New connection from ' + str(client_address[0]))
                     else:
-                        incoming = s.recv(1024)
-                        if incoming:
-                            try:
-                                data = data_queues[s].get_nowait()
-                            except Queue.Empty:
-                                data = bytearray(b'')
-                            data.extend(incoming)
-                            if b'\n' in data:
-                                parts = data.split(b'\n')
-                                message_queues[s].put(parts[0])
-                                data = parts[1]
-                            data_queues[s].put(data)
-                            if s not in outputs:
-                                outputs.append(s)
-                        else:
-                            if s in outputs:
-                                outputs.remove(s)
-                            inputs.remove(s)
-                            s.close()
-                            del message_queues[s]
-                            del data_queues[s]
-                            del responses[s]
+                        try:
+                            incoming = s.recv(1024)
+                            if incoming:
+                                try:
+                                    data = data_queues[s].get_nowait()
+                                except Queue.Empty:
+                                    data = bytearray(b'')
+                                data.extend(incoming)
+                                if b'\n' in data:
+                                    parts = data.split(b'\n')
+                                    message_queues[s].put(parts[0])
+                                    data = parts[1]
+                                data_queues[s].put(data)
+                                if s not in outputs:
+                                    outputs.append(s)
+                            else:
+                                if s in outputs:
+                                    outputs.remove(s)
+                                inputs.remove(s)
+                                s.close()
+                                del message_queues[s]
+                                del data_queues[s]
+                                del responses[s]
+                        except:
+                                if s in outputs:
+                                    outputs.remove(s)
+                                inputs.remove(s)
+                                s.close()
+                                del message_queues[s]
+                                del data_queues[s]
+                                del responses[s]
 
                 for s in writable:
                     try:
