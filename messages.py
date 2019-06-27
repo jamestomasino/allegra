@@ -6,11 +6,11 @@ class Messages():
     def __init__(self):
         self.state = {
             'room1': True,
-            'room2': False,
-            'room3': False,
-            'blue_key': False,
-            'chest_open': False,
-            'ring': False
+            # 'room2': False,
+            # 'room3': False,
+            # 'blue_key': False,
+            # 'chest_open': False,
+            # 'ring': False
         }
 
         self.responses = [
@@ -75,12 +75,18 @@ class Messages():
 
     def test_conditions(self, checks):
         for c in checks:
-            if not self.state[c]:
+            try:
+                if not self.state[c]:
+                    return False
+            except KeyError:
                 return False
         return True
 
     def test_exceptions(self, checks):
         for c in checks:
-            if self.state[c]:
-                return False
+            try:
+                if self.state[c]:
+                    return False
+            except KeyError:
+                continue
         return True
