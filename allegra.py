@@ -45,6 +45,7 @@ class Allegra():
                         data_queues[connection] = Queue.Queue()
                         responses[connection] = Messages()
                         logging.info('New connection from ' + str(client_address[0]))
+                        connection.send(b'Welcome. Type \'help\' to start.\n')
                     else:
                         try:
                             incoming = s.recv(1024)
