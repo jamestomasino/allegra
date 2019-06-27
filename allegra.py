@@ -85,7 +85,10 @@ class Allegra():
                     except Queue.Empty:
                         outputs.remove(s)
                     else:
-                        s.send(responses[s].check(next_msg))
+                        resp, next = responses[s].check(next_msg)
+                        s.send(resp)
+                        if next:
+                            message_queues[s].put(bytes(next, 'utf-8'))
 
                 for s in exceptional:
                     inputs.remove(s)

@@ -23,8 +23,8 @@ class Messages():
 
             # Room 1
             Response('look', 'You are in a dusty cave. There is a door to the north and a door to the west.', checks=['room1']),
-            Response('north', 'You move north through the doorway. Things don\'t smell so good.', checks=['room1'], set_on=['room2'], set_off=['room1']),
-            Response('west', 'You go west, my friend.', checks=['room1'], set_on=['room3'], set_off=['room1']),
+            Response('north', 'You move north through the doorway. Things don\'t smell so good.', checks=['room1'], set_on=['room2'], set_off=['room1'], next='look'),
+            Response('west', 'You go west, my friend.', checks=['room1'], set_on=['room3'], set_off=['room1'], next='look'),
 
             # Room 2 (north)
             Response('look', 'This room is filled with piles of trash. Amongst the trash is a lovely blue key.', checks=['room2'], exceptions=['blue_key']),
@@ -52,6 +52,7 @@ class Messages():
             msg = ' ' # handle non-text characters
 
         response = ''
+        next = ''
         for r in self.responses:
             # check if regex matches passed string
             if r.regex.search(msg):
@@ -65,11 +66,12 @@ class Messages():
                 for off in r.set_off:
                     self.state[off] = False
                 response = r.resp + '\n'
+                next = r.next
                 break
 
         if response == '':
             response = error + '\n'
-        return response.encode('utf-8')
+        return (response.encode('utf-8'), next)
 
     def test_conditions(self, checks):
         for c in checks:
