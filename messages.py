@@ -1,16 +1,15 @@
 from response import Response
+from db import DB
 
 error = 'I don\'t understand.'
 
 class Messages():
     def __init__(self):
+        self.db = DB()
+        self.db.getResponses('intro')
+
         self.state = {
             'room1': True,
-            # 'room2': False,
-            # 'room3': False,
-            # 'blue_key': False,
-            # 'chest_open': False,
-            # 'ring': False
         }
 
         self.responses = [
