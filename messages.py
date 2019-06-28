@@ -6,9 +6,7 @@ class Messages():
     def __init__(self):
         self.db = DB()
         self.responses = self.db.getResponses('intro')
-        self.state = {
-            'room1': True,
-        }
+        self.state = self.db.getState('intro')
 
     def check(self, msg_byte_arr):
         try:

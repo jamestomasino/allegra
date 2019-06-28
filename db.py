@@ -33,3 +33,23 @@ class DB():
             for row in rows:
                 responses.append(Response(row[1], row[2], row[3], row[4], row[5], row[6], row[7]))
             return responses
+
+    def getState(self, set_name):
+        """
+        Query messages by set name
+        :param conn: the Connection object
+        :param set_name:
+        :return:
+        """
+        conn = create_connection()
+        with conn:
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM states WHERE set_name=?", (set_name,))
+            rows = cur.fetchall()
+            state = {}
+            for row in rows:
+                if row[2]:
+                    default_states = row[2].split(',')
+                    for s in default_states:
+                        state[s] = True
+            return state
