@@ -5,8 +5,11 @@ error = 'I don\'t understand.'
 class Messages():
     def __init__(self):
         self.db = DB()
-        self.responses = self.db.getResponses('intro')
-        self.state = self.db.getState('intro')
+        self.set_module('intro')
+
+    def set_module(self, set_name):
+        self.responses = self.db.getResponses(set_name)
+        self.state = self.db.getState(set_name)
 
     def check(self, msg_byte_arr):
         try:
