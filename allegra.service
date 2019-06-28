@@ -1,0 +1,12 @@
+[Unit]
+# Allegra Socket-Level Interactive Fiction Bot
+Description=Allegra Service
+
+[Service]
+# Default install directory for allegra is /opt/allegra/
+ExecStart=/usr/bin/python3 /opt/allegra/allegra.py
+Restart=on-failure
+User=allegra
+
+[Install]
+WantedBy=default.target

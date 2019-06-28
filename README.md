@@ -17,3 +17,24 @@ To try the demo:
     nc cosmic.voyage 1822
     - or -
     telnet cosmic.voyage 1822
+
+## Installation
+
+Create a non-login service user to run the service:
+
+    sudo useradd -r -s /usr/sbin/nologin allegra
+
+Install the service:
+
+    sudo make install
+
+Start the service:
+
+    sudo systemctl start allegra
+
+## Removal
+
+Uninstall the service:
+
+    sudo make uninstall
+

@@ -1,7 +1,10 @@
 import sqlite3
 from response import Response
+import os
 
-db_file = 'db.sqlite'
+my_path = os.path.abspath(os.path.dirname(__file__))
+db_file = os.path.join(my_path, './db.sqlite')
+
 def create_connection():
     """ create a database connection to the SQLite database
         specified by the db_file
