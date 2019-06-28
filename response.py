@@ -12,7 +12,7 @@ Response object
 """
 class Response():
     def __init__(self, match_str, resp, is_on='', is_off='', set_on='', set_off='', next=''):
-        self.regex = re.compile(match_str)
+        self.regex = re.compile(r'\b%s\b' % match_str, re.I)
         self.resp = resp
 
         if is_on:
