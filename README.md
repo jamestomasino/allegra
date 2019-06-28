@@ -20,13 +20,11 @@ To try the demo:
 
 ## Installation
 
-Create a non-login service user to run the service:
-
-    sudo useradd -r -s /usr/sbin/nologin allegra
-
 Install the service:
 
     sudo make install
+
+_The systemd service is designed to run as the unprivileged user 'allegra'. This user is created during the install process if it doesn't already exist on your system._
 
 Start the service:
 
@@ -37,4 +35,3 @@ Start the service:
 Uninstall the service:
 
     sudo make uninstall
-
