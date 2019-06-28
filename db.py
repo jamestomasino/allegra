@@ -1,4 +1,5 @@
 import sqlite3
+from response import Response
 
 db_file = 'db.sqlite'
 def create_connection():
@@ -28,5 +29,7 @@ class DB():
             cur = conn.cursor()
             cur.execute("SELECT * FROM messages WHERE set_name=?", (set_name,))
             rows = cur.fetchall()
+            responses = []
             for row in rows:
-                print(row)
+                responses.append(Response(row[1], row[2], row[3], row[4], row[5], row[6], row[7]))
+            return responses
