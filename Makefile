@@ -17,6 +17,7 @@ install:
 	cp allegra.service /etc/systemd/system/
 	chown root:root /etc/systemd/system/allegra.service
 	chmod 644 /etc/systemd/system/allegra.service
+	id -u allegra &>/dev/null || useradd -r -s /usr/sbin/nologin allegra
 	systemctl daemon-reload
 
 uninstall:
