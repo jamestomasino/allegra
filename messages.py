@@ -29,11 +29,14 @@ class Messages():
                 for off in r.set_off:
                     self.state[off] = False
                 response = r.resp + '\n'
-                next = r.next
+                if r.next:
+                    next = r.next
+                else:
+                    response += '> '
                 break
 
         if response == '':
-            response = error + '\n'
+            response = error + '\n> '
         return (response.encode('utf-8'), next)
 
     def test_conditions(self, is_on):
