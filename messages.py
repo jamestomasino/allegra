@@ -1,6 +1,8 @@
 from db import DB
+from response import Response
 
 error = 'I don\'t understand.'
+
 
 class Messages():
     def __init__(self):
@@ -17,30 +19,35 @@ class Messages():
         except:
             msg = ' ' # handle non-text characters
 
-        response = ''
-        next = ''
-        for r in self.responses:
-            # check if regex matches passed string
-            if r.regex.search(msg):
-                # check that all required checks for response are valid too
-                if not self.test_conditions(r.is_on):
-                    continue
-                if not self.test_exceptions(r.is_off):
-                    continue
-                for on in r.set_on:
-                    self.state[on] = True
-                for off in r.set_off:
-                    self.state[off] = False
-                response = r.resp + '\n'
-                if r.next:
-                    next = r.next
-                else:
-                    response += '> '
-                break
+        # check for set changes
+        if Response.SET_CHANGE.search(msg):
+            self.set_module(Response.get_set_change(msg))
+            return (''.encode('utf-8'), 'allegra_set_start')
+        else:
+            response = ''
+            next = ''
+            for r in self.responses:
+                # check if regex matches passed string
+                if r.regex.search(msg):
+                    # check that all required checks for response are valid too
+                    if not self.test_conditions(r.is_on):
+                        continue
+                    if not self.test_exceptions(r.is_off):
+                        continue
+                    for on in r.set_on:
+                        self.state[on] = True
+                    for off in r.set_off:
+                        self.state[off] = False
+                    response = r.resp + '\n'
+                    if r.next:
+                        next = r.next
+                    else:
+                        response += '> '
+                    break
 
-        if response == '':
-            response = error + '\n> '
-        return (response.encode('utf-8'), next)
+            if response == '':
+                response = error + '\n> '
+            return (response.encode('utf-8'), next)
 
     def test_conditions(self, is_on):
         for c in is_on:

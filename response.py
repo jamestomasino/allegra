@@ -11,6 +11,13 @@ Response object
 :param next: Optional response string to auto-trigger if this is matched
 """
 class Response():
+
+    SET_CHANGE = re.compile(r'\ballegra_set_change_')
+
+    @staticmethod
+    def get_set_change(msg):
+        return re.sub(Response.SET_CHANGE, '', msg)
+
     def __init__(self, match_str, resp, is_on='', is_off='', set_on='', set_off='', next=''):
         self.regex = re.compile(r'\b%s\b' % match_str, re.I)
         self.resp = resp
