@@ -1,17 +1,12 @@
-from db import DB
 from response import Response
+from state import State
 
 error = 'I don\'t understand.'
 
-
 class Messages():
     def __init__(self):
-        self.db = DB()
-        self.set_module('intro')
-
-    def set_module(self, set_name):
-        self.responses = self.db.getResponses(set_name)
-        self.state = self.db.getState(set_name)
+        self.state = State()
+        self.state.set_module('intro')
 
     def check(self, msg_byte_arr):
         try:
@@ -21,23 +16,23 @@ class Messages():
 
         # check for set changes
         if Response.SET_CHANGE.search(msg):
-            self.set_module(Response.get_set_change(msg))
+            self.state.set_module(Response.get_set_change(msg))
             return (''.encode('utf-8'), 'allegra_set_start')
         else:
             response = ''
             next = ''
-            for r in self.responses:
+            for r in self.state.get_responses():
                 # check if regex matches passed string
                 if r.regex.search(msg):
                     # check that all required checks for response are valid too
-                    if not self.test_conditions(r.is_on):
+                    if not self.state.test_conditions(r.is_on):
                         continue
-                    if not self.test_exceptions(r.is_off):
+                    if not self.state.test_exceptions(r.is_off):
                         continue
                     for on in r.set_on:
-                        self.state[on] = True
+                        self.state.enable(on)
                     for off in r.set_off:
-                        self.state[off] = False
+                        self.state.disable(off)
                     response = r.resp + '\n'
                     if r.next:
                         next = r.next
@@ -48,21 +43,3 @@ class Messages():
             if response == '':
                 response = error + '\n> '
             return (response.encode('utf-8'), next)
-
-    def test_conditions(self, is_on):
-        for c in is_on:
-            try:
-                if not self.state[c]:
-                    return False
-            except KeyError:
-                return False
-        return True
-
-    def test_exceptions(self, is_off):
-        for c in is_off:
-            try:
-                if self.state[c]:
-                    return False
-            except KeyError:
-                continue
-        return True
