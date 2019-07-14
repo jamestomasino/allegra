@@ -9,7 +9,7 @@ class Messages():
     CODE_EXIT = '[allegra_exit]'
     CODE_SET_START = 'allegra_set_start'
 
-    MSG_CONNECT = b'Welcome. Type \'help\' to start or \'exit\' to quit.'
+    MSG_CONNECT = b'Type \'help\' to start or \'exit\' to quit.'
     MSG_ERROR = b'I don\'t understand.'
     MSG_NEWLINE = b'\n'
     MSG_PROMPT = b'> '
