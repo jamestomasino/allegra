@@ -32,7 +32,7 @@ class Messages():
         elif Response.SET_EXIT.search(msg):
             return (Messages.CODE_EXIT, Messages.CODE_SET_START)
         else:
-            response = Messages.CODE_ERROR
+            response = '[allegra_error]'
             next = ''
             for r in self.state.get_responses():
                 # check if regex matches passed string

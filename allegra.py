@@ -109,27 +109,36 @@ class Allegra():
                         outputs.remove(s)
                     else:
                         # send message to client
-                        resp, next = responses[s].check(next_msg)
-                        if resp:
-                            if (resp == Messages.CODE_ERROR):
-                                s.send(Messages.MSG_ERROR)
-                                s.send(Messages.MSG_NEWLINE)
-                            elif (resp == Messages.CODE_EXIT):
-                                if s in outputs:
-                                    outputs.remove(s)
-                                inputs.remove(s)
-                                s.close()
-                                del message_queues[s]
-                                del data_queues[s]
-                                del responses[s]
-                                break
-                            else:
-                                s.send(resp)
-                                s.send(Messages.MSG_NEWLINE)
-                        if next:
-                            message_queues[s].put(bytes(next, 'utf-8'))
+                        try:
+                            resp, next = responses[s].check(next_msg)
+                        except:
+                            resp = ''
                         else:
-                            s.send(Messages.MSG_PROMPT)
+                            if resp:
+                                if (resp == Messages.CODE_ERROR):
+                                    s.send(Messages.MSG_ERROR)
+                                    s.send(Messages.MSG_NEWLINE)
+                                elif (resp == Messages.CODE_EXIT):
+                                    if s in outputs:
+                                        outputs.remove(s)
+                                    inputs.remove(s)
+                                    s.close()
+                                    del message_queues[s]
+                                    del data_queues[s]
+                                    del responses[s]
+                                    break
+                                else:
+                                    s.send(resp)
+                                    s.send(Messages.MSG_NEWLINE)
+                            if next:
+                                try:
+                                    message_queues[s].put(bytes(next, 'utf-8'))
+                                except:
+                                    # probably a weird string like ` that broke
+                                    # user input. Just ignore it.
+                                    pass
+                            else:
+                                s.send(Messages.MSG_PROMPT)
 
 
                 for s in exceptional:
