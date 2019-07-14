@@ -8,14 +8,10 @@
 
 A TCP port based mystery
 
-## Demo
+## The Story
 
-The project is currently set up as a short room-based text adventure to demonstrate the data structures and state based flow controls. The real storyline will soon replace this demo.
+Talk to Allegra and discover her secrets:
 
-To try the demo:
-
-    nc cosmic.voyage 1822
-    - or -
     telnet cosmic.voyage 1822
 
 ## Installation
