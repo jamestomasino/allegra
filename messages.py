@@ -5,8 +5,9 @@ import textwrap
 error = 'I don\'t understand.'
 
 class Messages():
-    CODE_ERROR = '[error]'.encode('utf-8')
-    CODE_EXIT = '[exit]'.encode('utf-8')
+    CODE_ERROR = '[allegra_error]'.encode('utf-8')
+    CODE_EXIT = '[allegra_exit]'.encode('utf-8')
+    CODE_SET_START = 'allegra_set_start'.encode('utf-8')
 
     MSG_CONNECT = b'Welcome. Type \'help\' to start or \'exit\' to quit.'
     MSG_ERROR = b'I don\'t understand.'
@@ -27,9 +28,9 @@ class Messages():
         # check for set changes
         if Response.SET_CHANGE.search(msg):
             self.state.set_module(Response.get_set_change(msg))
-            return (''.encode('utf-8'), 'allegra_set_start')
+            return (''.encode('utf-8'), Messages.CODE_SET_START)
         elif Response.SET_EXIT.search(msg):
-            return (Messages.CODE_EXIT, 'allegra_set_start')
+            return (Messages.CODE_EXIT, Messages.CODE_SET_START)
         else:
             response = Messages.CODE_ERROR
             next = ''
