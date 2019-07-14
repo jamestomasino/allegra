@@ -29,9 +29,9 @@ class Messages():
             self.state.set_module(Response.get_set_change(msg))
             return (''.encode('utf-8'), 'allegra_set_start')
         elif Response.SET_EXIT.search(msg):
-            return ('[exit]'.encode('utf-8'), 'allegra_set_start')
+            return (Messages.CODE_EXIT, 'allegra_set_start')
         else:
-            response = '[error]'
+            response = Messages.CODE_ERROR
             next = ''
             for r in self.state.get_responses():
                 # check if regex matches passed string
