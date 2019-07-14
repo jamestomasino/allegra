@@ -110,13 +110,13 @@ class Allegra():
                     else:
                         # send message to client
                         resp, next = responses[s].check(next_msg)
-                        if (resp != '[error]'.encode('utf-8')):
-                            if resp:
+                        if resp:
+                            if (resp == '[error]'.encode('utf-8')):
+                                s.send(Messages.error_message)
+                                s.send(Messages.newline_message)
+                            else:
                                 s.send(resp)
                                 s.send(Messages.newline_message)
-                        else:
-                            s.send(Messages.error_message)
-                            s.send(Messages.newline_message)
                         if next:
                             message_queues[s].put(bytes(next, 'utf-8'))
                         else:
