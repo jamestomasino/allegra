@@ -115,10 +115,10 @@ class Allegra():
                             resp = ''
                         else:
                             if resp:
-                                if (resp == Messages.CODE_ERROR):
+                                if (resp == Messages.CODE_ERROR.encode('utf-8')):
                                     s.send(Messages.MSG_ERROR)
                                     s.send(Messages.MSG_NEWLINE)
-                                elif (resp == Messages.CODE_EXIT):
+                                elif (resp == Messages.CODE_EXIT.encode('utf-8')):
                                     if s in outputs:
                                         outputs.remove(s)
                                     inputs.remove(s)
