@@ -5,7 +5,7 @@ import textwrap
 error = 'I don\'t understand.'
 
 class Messages():
-    connect_message = b'Welcome. Type \'help\' to start or close your connection to quit.'
+    connect_message = b'Welcome. Type \'help\' to start or \'exit\' to quit.'
     error_message = b'I don\'t understand.'
     newline_message = b'\n'
     prompt_message = b'> '
@@ -25,6 +25,8 @@ class Messages():
         if Response.SET_CHANGE.search(msg):
             self.state.set_module(Response.get_set_change(msg))
             return (''.encode('utf-8'), 'allegra_set_start')
+        elif Response.SET_EXIT.search(msg):
+            return ('[exit]'.encode('utf-8'), 'allegra_set_start')
         else:
             response = '[error]'
             next = ''

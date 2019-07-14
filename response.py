@@ -13,6 +13,7 @@ Response object
 class Response():
 
     SET_CHANGE = re.compile(r'\ballegra_set_change_')
+    SET_EXIT = re.compile(r'exit')
 
     @staticmethod
     def get_set_change(msg):

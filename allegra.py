@@ -114,6 +114,15 @@ class Allegra():
                             if (resp == '[error]'.encode('utf-8')):
                                 s.send(Messages.error_message)
                                 s.send(Messages.newline_message)
+                            elif (resp == '[exit]'.encode('utf-8')):
+                                if s in outputs:
+                                    outputs.remove(s)
+                                inputs.remove(s)
+                                s.close()
+                                del message_queues[s]
+                                del data_queues[s]
+                                del responses[s]
+                                break
                             else:
                                 s.send(resp)
                                 s.send(Messages.newline_message)
