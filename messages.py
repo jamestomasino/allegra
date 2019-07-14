@@ -4,6 +4,11 @@ from state import State
 error = 'I don\'t understand.'
 
 class Messages():
+    connect_message = b'Welcome. Type \'help\' to start or close your connection to quit.'
+    error_message = b'I don\'t understand.'
+    newline_message = b'\n'
+    prompt_message = b'> '
+
     def __init__(self):
         self.state = State()
         self.state.set_module('intro')
@@ -33,13 +38,7 @@ class Messages():
                         self.state.enable(on)
                     for off in r.set_off:
                         self.state.disable(off)
-                    response = r.resp + '\n'
                     if r.next:
                         next = r.next
-                    else:
-                        response += '> '
                     break
-
-            if response == '':
-                response = error + '\n> '
-            return (response.encode('utf-8'), next)
+            return (r.resp.encode('utf-8'), next)

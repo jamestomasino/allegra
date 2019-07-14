@@ -50,7 +50,9 @@ class Allegra():
                         data_queues[connection] = Queue.Queue()
                         responses[connection] = Messages()
                         logging.info('New connection from ' + str(client_address[0]))
-                        connection.send(b'Welcome. Type \'help\' to start or close your connection to quit.\n> ')
+                        connection.send(Messages.connect_message)
+                        connection.send(Messages.newline_message)
+                        connection.send(Messages.prompt_message)
                     else:
                         try:
                             incoming = s.recv(1024)
@@ -108,9 +110,17 @@ class Allegra():
                     else:
                         # send message to client
                         resp, next = responses[s].check(next_msg)
-                        s.send(resp)
+                        if resp:
+                            s.send(resp)
+                            s.send(Messages.newline_message)
+                        else:
+                            s.send(Messages.error_message)
+                            s.send(Messages.newline_message)
                         if next:
                             message_queues[s].put(bytes(next, 'utf-8'))
+                        else:
+                            s.send(Messages.prompt_message)
+
 
                 for s in exceptional:
                     # if errors, clean everything up
