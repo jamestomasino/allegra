@@ -1,5 +1,6 @@
 from response import Response
 from state import State
+import textwrap
 
 error = 'I don\'t understand.'
 
@@ -12,19 +13,20 @@ class Messages():
     def __init__(self):
         self.state = State()
         self.state.set_module('intro')
+        self.wrapper = textwrap.TextWrapper(width=70)
 
     def check(self, msg_byte_arr):
         try:
             msg = str(msg_byte_arr, 'utf-8')
         except:
-            msg = ' ' # handle non-text characters
+            msg = '' # handle non-text characters
 
         # check for set changes
         if Response.SET_CHANGE.search(msg):
             self.state.set_module(Response.get_set_change(msg))
             return (''.encode('utf-8'), 'allegra_set_start')
         else:
-            response = ''
+            response = '[error]'
             next = ''
             for r in self.state.get_responses():
                 # check if regex matches passed string
@@ -40,5 +42,7 @@ class Messages():
                         self.state.disable(off)
                     if r.next:
                         next = r.next
+                    # wrap text for pretty output
+                    response = self.wrapper.fill(text = r.resp)
                     break
-            return (r.resp.encode('utf-8'), next)
+            return (response.encode('utf-8'), next)
