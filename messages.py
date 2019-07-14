@@ -5,10 +5,13 @@ import textwrap
 error = 'I don\'t understand.'
 
 class Messages():
-    connect_message = b'Welcome. Type \'help\' to start or \'exit\' to quit.'
-    error_message = b'I don\'t understand.'
-    newline_message = b'\n'
-    prompt_message = b'> '
+    CODE_ERROR = '[error]'.encode('utf-8')
+    CODE_EXIT = '[exit]'.encode('utf-8')
+
+    MSG_CONNECT = b'Welcome. Type \'help\' to start or \'exit\' to quit.'
+    MSG_ERROR = b'I don\'t understand.'
+    MSG_NEWLINE = b'\n'
+    MSG_PROMPT = b'> '
 
     def __init__(self):
         self.state = State()

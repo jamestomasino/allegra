@@ -50,9 +50,9 @@ class Allegra():
                         data_queues[connection] = Queue.Queue()
                         responses[connection] = Messages()
                         logging.info('New connection from ' + str(client_address[0]))
-                        connection.send(Messages.connect_message)
-                        connection.send(Messages.newline_message)
-                        connection.send(Messages.prompt_message)
+                        connection.send(Messages.MSG_CONNECT)
+                        connection.send(Messages.MSG_NEWLINE)
+                        connection.send(Messages.MSG_PROMPT)
                     else:
                         try:
                             incoming = s.recv(1024)
@@ -111,10 +111,10 @@ class Allegra():
                         # send message to client
                         resp, next = responses[s].check(next_msg)
                         if resp:
-                            if (resp == '[error]'.encode('utf-8')):
-                                s.send(Messages.error_message)
-                                s.send(Messages.newline_message)
-                            elif (resp == '[exit]'.encode('utf-8')):
+                            if (resp == Messages.CODE_ERROR):
+                                s.send(Messages.MSG_ERROR)
+                                s.send(Messages.MSG_NEWLINE)
+                            elif (resp == Messages.CODE_EXIT):
                                 if s in outputs:
                                     outputs.remove(s)
                                 inputs.remove(s)
@@ -125,11 +125,11 @@ class Allegra():
                                 break
                             else:
                                 s.send(resp)
-                                s.send(Messages.newline_message)
+                                s.send(Messages.MSG_NEWLINE)
                         if next:
                             message_queues[s].put(bytes(next, 'utf-8'))
                         else:
-                            s.send(Messages.prompt_message)
+                            s.send(Messages.MSG_PROMPT)
 
 
                 for s in exceptional:
